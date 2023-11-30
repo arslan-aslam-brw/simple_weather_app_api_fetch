@@ -3,9 +3,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:simple_weather_app_api_fetch/widgets/aditiona_info_page.dart';
 import 'package:simple_weather_app_api_fetch/widgets/weather_forcaste.dart';
+import 'package:http/http.dart' as http;
 
-class WeatherAppPage extends StatelessWidget {
+class WeatherAppPage extends StatefulWidget {
   const WeatherAppPage({super.key});
+
+  @override
+  State<WeatherAppPage> createState() => _WeatherAppPageState();
+}
+
+class _WeatherAppPageState extends State<WeatherAppPage> {
+  late double temp;
+
+  Future getWeather() async {}
 
   @override
   Widget build(BuildContext context) {
