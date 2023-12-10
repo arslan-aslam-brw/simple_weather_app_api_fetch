@@ -25,7 +25,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
   /// function for getting Temp from API Key
   Future<Map<String, dynamic>> getTemp() async {
     try {
-      const city = 'London';
+      String city = 'London';
 
       /// http.get is from https packge of flutter
       final res = await http.get(
@@ -65,7 +65,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
         ],
       ),
 
-      /// future builder is use dfor handling data for future, it recover api calls
+      /// future builder is used for handling data for future, it recover api calls
       /// handle states of widets, states through snapshoot atribute
       body: FutureBuilder(
         future: getTemp(),
@@ -79,18 +79,35 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
 
           /// Handling error if error occure, give this mesage
           if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
+            return const Center(
+              child: Text("Please Check Your'e Internet Connection!"),
             );
           }
 
-          /// getting data from API , web
+          /// getting data from API , web or scaning json file with snapshot keyword
           final data = snapshot.data!;
 
+          /// Extracting Data From jsonFile
+          /// For Current Temprature
           final currentTemp = (data['list'][0]['main']['temp']);
 
-          /// [0] is used for showing int to string, because json file has data in Map,
+          /// In json file, Data is overall data of jsonFile, list is a object of jsonFile
+          /// and ['main'], [0], ['temp'] is object of list, of jsonFile, [0], is possition
+          /// of object of jsonFile, there is list on zero and city is on 1 possition
+          /// in this jsonFile
+
+          /// skyPrediction, coluds or Rain
+          /// /// [0] is used for showing int to string, because json file has data in Map,
           final skyPredic = (data['list'][0]['weather'][0]['main']);
+
+          /// For Humidity
+          final gethumidity = (data['list'][0]['main']['humidity']);
+
+          /// For Wind Speed
+          final getWindSpeed = (data['list'][0]['wind']['speed']);
+
+          /// For Pressure
+          final getPressure = (data['list'][0]['main']['pressure']);
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -125,10 +142,10 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                                   height: 8,
                                 ),
                                 Icon(
-                                  /// setting conditions with ternary operator, if coud,
+                                  /// setting conditions with ternary operator, if cloud,
                                   skyPredic == 'Clouds' || skyPredic == 'Rain'
                                       ? Icons.cloud
-                                      : Icons.cloudy_snowing,
+                                      : Icons.sunny,
                                   size: 60,
                                 ),
                                 const SizedBox(
@@ -155,7 +172,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
 
-                  /// calling Forcaste widget
+                  /// Hourly Forcaste widget
                   const WeatherForcaste(),
 
                   const SizedBox(
@@ -166,11 +183,27 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
 
-                  /// calling Aditional Information widget
+                  /// Aditional Information widget
                   const SizedBox(
                     height: 10,
                   ),
-                  const AditionalInfoWidget(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      AditionalInfo(
+                          icon: Icons.water_drop_outlined,
+                          textInfo: "Humidity",
+                          textTepm: gethumidity.toString()),
+                      AditionalInfo(
+                          icon: Icons.wind_power_outlined,
+                          textInfo: "Wind Speed",
+                          textTepm: getWindSpeed.toString()),
+                      AditionalInfo(
+                          icon: Icons.compress_outlined,
+                          textInfo: "Pressur",
+                          textTepm: getPressure.toString()),
+                    ],
+                  ),
                 ],
               ),
             ),

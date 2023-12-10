@@ -1,30 +1,5 @@
 import 'package:flutter/material.dart';
 
-class AditionalInfoWidget extends StatelessWidget {
-  const AditionalInfoWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        AditionalInfo(
-            icon: Icons.water_drop_outlined,
-            textInfo: "Humidity",
-            textTepm: "60"),
-        AditionalInfo(
-            icon: Icons.wind_power_outlined,
-            textInfo: "Wind Speed",
-            textTepm: "7.5"),
-        AditionalInfo(
-            icon: Icons.compress_outlined,
-            textInfo: "Pressur",
-            textTepm: "1010"),
-      ],
-    );
-  }
-}
-
 /// Seprated Widget For Hourly, easy to use, code redendency remover method, make
 /// one widget or method, create construcotr and call it where we want and modified their
 class AditionalInfo extends StatelessWidget {
