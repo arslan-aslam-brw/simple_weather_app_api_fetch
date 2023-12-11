@@ -1,48 +1,5 @@
 import 'package:flutter/material.dart';
 
-class WeatherForcaste extends StatelessWidget {
-  const WeatherForcaste({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "9:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "10:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "12:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "1:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "1:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "1:00",
-              temprature: "301.71"),
-          HourlyForcate(
-              icon: Icons.cloud_circle_outlined,
-              textTime: "1:00",
-              temprature: "301.71"),
-        ],
-      ),
-    );
-  }
-}
-
 /// Seprated Widget For Hourly, easy to use, code redendency remover method, make
 /// one widget or method, create construcotr and call it where we want and modified their
 class HourlyForcate extends StatelessWidget {
@@ -71,6 +28,8 @@ class HourlyForcate extends StatelessWidget {
             ),
             Text(
               textTime,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(

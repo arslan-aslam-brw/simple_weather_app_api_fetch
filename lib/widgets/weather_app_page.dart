@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_weather_app_api_fetch/widgets/aditiona_info_page.dart';
 import 'package:simple_weather_app_api_fetch/widgets/secrect_api.dart';
 import 'package:simple_weather_app_api_fetch/widgets/weather_forcaste.dart';
@@ -15,22 +16,24 @@ class WeatherAppPage extends StatefulWidget {
 }
 
 class _WeatherAppPageState extends State<WeatherAppPage> {
+  late Future<Map<String, dynamic>> weatherUpdate;
+
   /// rebuild state in statefull widget
   @override
   void initState() {
     super.initState();
-    getTemp();
+    weatherUpdate = getTemp();
   }
 
   /// function for getting Temp from API Key
   Future<Map<String, dynamic>> getTemp() async {
     try {
-      String city = 'London';
+      String city = 'Vehari';
 
       /// http.get is from https packge of flutter
       final res = await http.get(
         Uri.parse(
-            'https://api.openweathermap.org/data/2.5/forecast?q=$city&APPID=$appid'),
+            'https://api.openweathermap.org/data/2.5/forecast?q=$city,PK&APPID=$appid'),
       );
 
 //// because we extracting different different things from jsonFile, so we use jsonDecode
@@ -58,7 +61,9 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {});
+              setState(() {
+                weatherUpdate = getTemp();
+              });
             },
             icon: const Icon(Icons.refresh_outlined),
           ),
@@ -68,7 +73,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
       /// future builder is used for handling data for future, it recover api calls
       /// handle states of widets, states through snapshoot atribute
       body: FutureBuilder(
-        future: getTemp(),
+        future: weatherUpdate,
         builder: (context, snapshot) {
           /// adding progress indicator if data from web is late
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,6 +104,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
           /// skyPrediction, coluds or Rain
           /// /// [0] is used for showing int to string, because json file has data in Map,
           final skyPredic = (data['list'][0]['weather'][0]['main']);
+          final getCloudCover = (data['list'][0]['clouds']['all']);
 
           /// For Humidity
           final gethumidity = (data['list'][0]['main']['humidity']);
@@ -151,11 +157,25 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                Text(
-                                  skyPredic,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "$skyPredic",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "$getCloudCover%",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -168,12 +188,37 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                     height: 20,
                   ),
                   const Text(
-                    "Weather Forcaste",
+                    "Hourly Forcaste",
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
 
                   /// Hourly Forcaste widget
-                  const WeatherForcaste(),
+
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 20,
+                      itemBuilder: (context, index) {
+                        /// getting time from web, jsonFile
+                        final getTime = data['list'][index + 1]['dt_txt'];
+
+                        /// With intl package, we extracting only time from jsonFile
+                        final time = DateTime.parse(getTime);
+
+                        return HourlyForcate(
+                          icon: skyPredic == 'Clouds' || skyPredic == 'Rain'
+                              ? Icons.cloud
+                              : Icons.sunny,
+                          temprature: data['list'][index + 1]['main']['temp']
+                              .toString(),
+
+                          /// Formating time style
+                          textTime: DateFormat.j().format(time),
+                        );
+                      },
+                    ),
+                  ),
 
                   const SizedBox(
                     height: 20,
