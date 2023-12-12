@@ -33,7 +33,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
       /// http.get is from https packge of flutter
       final res = await http.get(
         Uri.parse(
-            'https://api.openweathermap.org/data/2.5/forecast?q=$city,PK&APPID=$appid'),
+            'https://api.openweathermap.org/data/2.5/forecast?q=$city,PK&units=metric&APPID=$appid'),
       );
 
 //// because we extracting different different things from jsonFile, so we use jsonDecode
@@ -115,6 +115,8 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
           /// For Pressure
           final getPressure = (data['list'][0]['main']['pressure']);
 
+          final getCityName = (data['city']['name']);
+
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
@@ -133,13 +135,40 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
                         child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Center(
+                              child: Text(
+                                "$getCityName, Punjab, Pakistan",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      elevation: 10,
+                      shape: const BeveledRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               children: [
                                 Text(
-                                  "$currentTemp F",
+                                  "$currentTemp °C",
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
@@ -169,12 +198,14 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                                     const SizedBox(
                                       width: 10,
                                     ),
-                                    Text(
-                                      "$getCloudCover%",
-                                      style: const TextStyle(
-                                        fontSize: 18,
+                                    if (skyPredic == 'Clouds' ||
+                                        skyPredic == 'Rain')
+                                      Text(
+                                        "$getCloudCover%",
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ],
@@ -188,33 +219,54 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                     height: 20,
                   ),
                   const Text(
-                    "Hourly Forcaste",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    "Hourly & Weekly Forcaste",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
 
                   /// Hourly Forcaste widget
 
                   SizedBox(
-                    height: 100,
+                    height: 160,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 20,
+                      itemCount: 39,
                       itemBuilder: (context, index) {
                         /// getting time from web, jsonFile
                         final getTime = data['list'][index + 1]['dt_txt'];
+                        final getDate = data['list'][index + 1]['dt_txt'];
+
+                        /// getting Clouds or Not of all items of json
+                        final getSkyPredic =
+                            (data['list'][index + 1]['weather'][0]['main']);
 
                         /// With intl package, we extracting only time from jsonFile
+                        ///
                         final time = DateTime.parse(getTime);
+                        final date = DateTime.parse(getDate);
 
                         return HourlyForcate(
-                          icon: skyPredic == 'Clouds' || skyPredic == 'Rain'
-                              ? Icons.cloud
-                              : Icons.sunny,
-                          temprature: data['list'][index + 1]['main']['temp']
-                              .toString(),
+                          icon:
+                              getSkyPredic == 'Clouds' || getSkyPredic == 'Rain'
+                                  ? Icons.cloud
+                                  : Icons.sunny,
+                          temprature:
+                              "${data['list'][index + 1]['main']['temp'].toString()} °C ",
 
                           /// Formating time style
-                          textTime: DateFormat.j().format(time),
+                          textTime: DateFormat.jm().format(time).toString(),
+                          textDate: DateFormat('d/M/y').format(date).toString(),
+
+                          textClear: data['list'][index + 1]['weather'][0]
+                                  ['main']
+                              .toString(),
+
+                          textPredictCloudOrRainPercent: getSkyPredic ==
+                                      'Clouds' ||
+                                  getSkyPredic == 'Rain'
+                              ? "${data['list'][index + 1]['clouds']['all'].toString()}%"
+                              : const String.fromEnvironment(''),
                         );
                       },
                     ),
@@ -225,7 +277,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                   ),
                   const Text(
                     "Additional Information",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
 
                   /// Aditional Information widget
