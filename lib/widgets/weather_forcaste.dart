@@ -23,7 +23,7 @@ class HourlyForcate extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 120,
-      height: 160,
+      height: 150,
       child: Card(
         elevation: 10,
         shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),

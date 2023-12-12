@@ -228,7 +228,7 @@ class _WeatherAppPageState extends State<WeatherAppPage> {
                   /// Hourly Forcaste widget
 
                   SizedBox(
-                    height: 160,
+                    height: 150,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: 39,
