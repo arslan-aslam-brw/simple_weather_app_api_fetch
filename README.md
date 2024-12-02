@@ -1,16 +1,31 @@
-# simple_weather_app_api_fetch
 
-A new Flutter project.
+# Single Page Weather App
 
-## Getting Started
+Hi, this is a Single Page Simple Weather App for Mobiles. I create this App using Flutter Framework. In this App I learn more about flutter, flutter widgets, UI Basics and Api calls and it's work. This is basic and beginner level App for basic purpose of knowlged and code practing.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## App Demo
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<img align="center"  width="1000" height="800" src="https://github.com/arslanaslam5588/Simple_Weather_App_1/blob/master/assets/WeatherAppGif.gif">
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+
+- Light/dark mode
+- Live previews , Live Weather 
+- Refresh Page
+- Cross platform
+
+
+## Installation
+
+Just Download and Install by Clicking <a href = "https://github.com/arslanaslam5588/Simple_Weather_App_1/raw/refs/heads/master/assets/Weather%20App.apk" >Here</a>
+
+  
+## Skills
+Flutter, Dart, Https Api, Basic Programming 
+
+
+## Support
+
+For support, email arslang5588@gmail.com or join me on <a href = "https://www.linkedin.com/in/arslanaslam77/" >Linkedin</a>.
+
